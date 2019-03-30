@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://unpkg.com/mobx@4.9.4/lib/mobx.umd.js"></script>
+</head>
+<body>
+    <script>
+        class Timer {
+
+            constructor() {
+                this.start = Date.now();
+                this.current = Date.now();
+            }
+
+            get elapsedTime() {
+                return parseInt((this.current - this.start) / 1000);
+            }
+
+            tick() {
+                this.current = Date.now();
+            }
+        }
+
+        mobx.decorate(Timer, {
+            start: mobx.observable,
+            current: mobx.observable,
+            elapsedTime: mobx.computed,
+            tick: mobx.action
+        });
+
+        const timer = new Timer();
+
+        mobx.autorun(() => {
+            console.log(timer.elapsedTime);
+        });
+
+        setInterval(() => {
+            timer.tick();
+        }, 1000);
+    </script>
+</body>
+</html>
